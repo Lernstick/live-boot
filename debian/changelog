@@ -1,3 +1,11 @@
+live-boot (3.0~a1-1) experimental; urgency=low
+
+  * Switching to source format 3.0 (quilt).
+  * Removing live-initramfs transitional package.
+  * Removing lenny support.
+
+ -- Daniel Baumann <daniel@debian.org>  Tue, 10 Aug 2010 02:02:39 +0200
+
 live-boot (2.0.0-1) unstable; urgency=low
 
   * Updating debian-installer languagelist.
