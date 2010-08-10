@@ -190,12 +190,7 @@ copy_exec /bin/cpio /bin
 # Program: udev
 if [ -x /sbin/udevadm ]
 then
-	# lenny
 	copy_exec /sbin/udevadm /sbin
-else
-	# etch
-	copy_exec /sbin/udevtrigger /sbin
-	copy_exec /sbin/udevsettle /sbin
 fi
 if [ -x /usr/bin/udevinfo ]
 then
