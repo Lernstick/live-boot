@@ -1551,15 +1551,6 @@ find_livefs ()
 {
 	timeout="${1}"
 
-	# don't start autodetection before timeout has expired
-	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
-	then
-		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
-		then
-			return 1
-		fi
-	fi
-
 	# first look at the one specified in the command line
 	case "${LIVE_MEDIA}" in
 		removable-usb)
@@ -1610,6 +1601,16 @@ find_livefs ()
 			fi
 			;;
 	esac
+
+	# only check for timeout after scanning for explicitly specified devices
+	# don't start autodetection before timeout has expired
+	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
+	then
+		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
+		then
+			return 1
+		fi
+	fi
 
 	# or do the scan of block devices
 	# prefer removable devices over non-removable devices, so scan them first
