@@ -268,16 +268,10 @@ find_livefs ()
 {
 	timeout="${1}"
 
-	# don't start autodetection before timeout has expired
-	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
-	then
-		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
-		then
-			return 1
-		fi
-	fi
-
-	# first look at the one specified in the command line
+	# first look at the one specified in the command line This is OK
+	# before the timeout has expired, if more than one device matches the
+	# criteria the outcome is undefined anyway, so we can pick the first
+	# one that appears.
 	case "${LIVE_MEDIA}" in
 		removable-usb)
 			for sysblock in $(removable_usb_dev "sys")
@@ -290,7 +284,6 @@ find_livefs ()
 					fi
 				done
 			done
-			return 1
 			;;
 
 		removable)
@@ -304,7 +297,6 @@ find_livefs ()
 					fi
 				done
 			done
-			return 1
 			;;
 
 		*)
@@ -318,7 +310,16 @@ find_livefs ()
 			;;
 	esac
 
-	# or do the scan of block devices
+	# don't start autodetection before timeout has expired
+	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
+	then
+		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
+		then
+			return 1
+		fi
+	fi
+
+	# autodetection of live media
 	# prefer removable devices over non-removable devices, so scan them first
 	devices_to_scan="$(removable_dev 'sys') $(non_removable_dev 'sys')"
 
