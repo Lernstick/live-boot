@@ -1,3 +1,9 @@
+live-boot (3.0.1-1+lernstick1) lernstick; urgency=low
+
+  * [fcbac] Immediately detect medium from live-media parameter
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Tue, 19 Feb 2013 10:00:16 +0100
+
 live-boot (3.0.1-1) unstable; urgency=low
 
   [ chals ]
