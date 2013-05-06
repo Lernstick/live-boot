@@ -73,19 +73,7 @@ Main ()
 			fi
 
 			# Scan local devices for the image
-			i=0
-			while [ "$i" -lt 60 ]
-			do
-				livefs_root=$(find_livefs ${i})
-
-				if [ -n "${livefs_root}" ]
-				then
-					break
-				fi
-
-				sleep 1
-				i="$(($i + 1))"
-			done
+			livefs_root=$(find_livefs ${i})
 		fi
 	fi
 

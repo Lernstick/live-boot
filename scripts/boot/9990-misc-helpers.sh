@@ -264,101 +264,103 @@ check_dev ()
 	return 1
 }
 
-find_livefs ()
+device_search_list ()
 {
-	timeout="${1}"
-
-	# don't start autodetection before timeout has expired
-	if [ -n "${LIVE_MEDIA_TIMEOUT}" ]
-	then
-		if [ "${timeout}" -lt "${LIVE_MEDIA_TIMEOUT}" ]
-		then
-			return 1
-		fi
-	fi
-
-	# first look at the one specified in the command line
-	case "${LIVE_MEDIA}" in
-		removable-usb)
-			for sysblock in $(removable_usb_dev "sys")
-			do
-				for dev in $(subdevices "${sysblock}")
-				do
-					if check_dev "${dev}"
-					then
-						return 0
-					fi
-				done
-			done
-			return 1
+	local mtype="$1"
+	case $mtype in
+		"removable-usb")
+			removable_usb_dev "sys"
 			;;
-
-		removable)
-			for sysblock in $(removable_dev "sys")
-			do
-				for dev in $(subdevices "${sysblock}")
-				do
-					if check_dev "${dev}"
-					then
-						return 0
-					fi
-				done
-			done
-			return 1
+		"removable")
+			removable_dev "sys"
 			;;
-
+		"non-removable")
+			non_removable_dev "sys"
+			;;
+		"any")
+			removable_dev "sys"
+			non_removable_dev "sys"
+			;;
+        "uuid="*)
+            dev2sys $(blkid -o device -U ${mtype#uuid=})
+            ;;
+        "label="*)
+            dev2sys $(blkid -o device -L ${mtype#label=})
+            ;;
 		*)
-			if [ ! -z "${LIVE_MEDIA}" ]
+            # Assume this is meant to be a device node
+            dev2sys ${mtype}
+			;;
+	esac
+}
+
+scan_devices ()
+{
+	for sysblock in $(device_search_list $1)
+	do
+		if is_nice_device "${sysblock}"
+		then
+			devname=$(sys2dev "${sysblock}")
+			[ -e "$devname" ] || continue
+
+            # check for CD-ROM device
+			if /lib/udev/cdrom_id ${devname} > /dev/null
 			then
-				if check_dev "null" "${LIVE_MEDIA}" "skip_uuid_check"
+				if check_dev "null" "${devname}"
 				then
 					return 0
 				fi
 			fi
-			;;
-	esac
 
-	# or do the scan of block devices
-	# prefer removable devices over non-removable devices, so scan them first
-	devices_to_scan="$(removable_dev 'sys') $(non_removable_dev 'sys')"
-
-	for sysblock in $devices_to_scan
-	do
-		devname=$(sys2dev "${sysblock}")
-		[ -e "$devname" ] || continue
-		fstype=$(get_fstype "${devname}")
-
-		if /lib/udev/cdrom_id ${devname} > /dev/null
-		then
-			if check_dev "null" "${devname}"
-			then
-				return 0
-			fi
-		elif is_nice_device "${sysblock}"
-		then
+            # check all partitions (subdevices)
 			for dev in $(subdevices "${sysblock}")
 			do
 				if check_dev "${dev}"
 				then
 					return 0
-				fi
-			done
-		elif [ "${fstype}" = "squashfs" -o \
-			"${fstype}" = "btrfs" -o \
-			"${fstype}" = "ext2" -o \
-			"${fstype}" = "ext3" -o \
-			"${fstype}" = "ext4" -o \
-			"${fstype}" = "jffs2" ]
-		then
-			# This is an ugly hack situation, the block device has
-			# an image directly on it.  It's hopefully
-			# live-boot, so take it and run with it.
-			ln -s "${devname}" "${devname}.${fstype}"
-			echo "${devname}.${fstype}"
-			return 0
+                fi
+            done
+
+            # check for filesystem directly on the device
+            # this is only done for unpartitioned devices
+			fstype=$(get_fstype "${devname}")
+		    if [ "${fstype}" = "squashfs" -o \
+				"${fstype}" = "btrfs" -o \
+				"${fstype}" = "ext2" -o \
+				"${fstype}" = "ext3" -o \
+				"${fstype}" = "ext4" -o \
+				"${fstype}" = "jffs2" ]
+			then
+				# This is an ugly hack situation, the block device has
+				# an image directly on it.  It's hopefully
+				# live-boot, so take it and run with it.
+				ln -s "${devname}" "${devname}.${fstype}"
+				echo "${devname}.${fstype}"
+				return 0
+			fi
 		fi
 	done
 
+	return 1
+}
+
+find_livefs ()
+{
+	# loop over LIVE_MEDIA values
+	for mtype in $(echo ${LIVE_MEDIA} | tr "," " ")
+	do
+		# search for medium until found or timeout
+		counter=0
+		while [ $counter -lt ${LIVE_MEDIA_TIMEOUT} ]
+		do
+			if scan_devices ${mtype}
+			then
+				return 0
+			fi
+			sleep 1
+			counter="$((counter + 1))"
+		done
+	done
 	return 1
 }
 
@@ -408,6 +410,11 @@ sys2dev ()
 {
 	sysdev=${1#/sys}
 	echo "/dev/$($udevinfo -q name -p ${sysdev} 2>/dev/null|| echo ${sysdev##*/})"
+}
+
+dev2sys ()
+{
+	echo "/sys/$($udevinfo -q path -n $1 2>/dev/null)"
 }
 
 subdevices ()

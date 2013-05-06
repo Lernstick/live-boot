@@ -97,6 +97,13 @@ Cmdline_old ()
 
 			live-media=*|bootfrom=*)
 				LIVE_MEDIA="${_PARAMETER#*=}"
+
+				# default value is any
+				if [ -z "${LIVE_MEDIA}" ]
+				then
+					LIVE_MEDIA="any"
+				fi
+
 				export LIVE_MEDIA
 				;;
 
