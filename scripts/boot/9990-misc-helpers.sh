@@ -273,7 +273,7 @@ find_livefs ()
 	# criteria the outcome is undefined anyway, so we can pick the first
 	# one that appears.
 	case "${LIVE_MEDIA}" in
-		removable-usb)
+		removable-usb|usb)
 			for sysblock in $(removable_usb_dev "sys")
 			do
 				for dev in $(subdevices "${sysblock}")
@@ -285,7 +285,18 @@ find_livefs ()
 				done
 			done
 			;;
-
+		cdrom)
+			for sysblock in $(removable_cdrom_dev "sys")
+			do
+				for dev in $(subdevices "${sysblock}")
+				do
+					if check_dev "${dev}"
+					then
+						return 0
+					fi
+				done
+			done
+			;;
 		removable)
 			for sysblock in $(removable_dev "sys")
 			do
@@ -1076,22 +1087,32 @@ get_luks_backing_device ()
 removable_dev ()
 {
 	output_format="${1}"
-	want_usb="${2}"
+	device_class="${2}"
 	ret=
 
 	for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "/(loop|ram|dm-|fd)")
 	do
 		dev_ok=
-		if [ "$(cat ${sysblock}/removable)" = "1" ]
+		if [ "${device_class}" = "usb" ] && readlink ${sysblock} | grep -Eq "/usb[0-9]+/"
 		then
-			if [ -z "${want_usb}" ]
+			# We only want USB and this is an USB device
+			dev_ok="true"
+		elif [ "${device_class}" = "cdrom" ] && echo ${sysblock} | grep -Eq "/sr[0-9]+$"
+		then
+			# We only want CD-ROM devices and this is such a device
+			dev_ok="true"
+		elif [ -z "${device_class}" ]
+		then
+			if readlink ${sysblock} | grep -Eq "/(usb[0-9]+|fw[0-9]+|mmc[0-9]+)/" ||  [ "$(cat ${sysblock}/removable)" = "1" ]
 			then
+				# Assume all USB, Firewire and SD cards are external,
+				# This is the best possible guess, eg. udisks has the same logic
+				# There is NO property which indicates with certainity if a device is
+				# removable or not.
+				# Devices that contain a removable medium are considered removable
+				# too. Many (older) USB sticks also set this property although it's
+				# technically wrong. The flash chips are NOT removable from the device.
 				dev_ok="true"
-			else
-				if readlink ${sysblock} | grep -q usb
-				then
-					dev_ok="true"
-				fi
 			fi
 		fi
 
@@ -1116,7 +1137,14 @@ removable_usb_dev ()
 {
 	output_format="${1}"
 
-	removable_dev "${output_format}" "want_usb"
+	removable_dev "${output_format}" "usb"
+}
+
+removable_cdrom_dev ()
+{
+	output_format="${1}"
+
+	removable_dev "${output_format}" "cdrom"
 }
 
 non_removable_dev ()
