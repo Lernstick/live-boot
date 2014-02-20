@@ -1,3 +1,9 @@
+live-boot (3.0.1-1+lernstick3) lernstick; urgency=medium
+
+  * [b58d] Fix removable device flag handling for live-medium
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Thu, 20 Feb 2014 14:40:59 +0100
+
 live-boot (3.0.1-1+lernstick1) lernstick; urgency=low
 
   * [fcbac] Immediately detect medium from live-media parameter
