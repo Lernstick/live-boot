@@ -1,3 +1,10 @@
+live-boot (3.0.1-1+lernstick4) lernstick; urgency=medium
+
+  * [6df9] Suppress loadkeys output in cryptdevice path
+  * [f0ad] Plymouth support for LUKS password prompt
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Tue, 08 Jul 2014 11:02:18 +0200
+
 live-boot (3.0.1-1+lernstick3) lernstick; urgency=medium
 
   * [b58d] Fix removable device flag handling for live-medium
