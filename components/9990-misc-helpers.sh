@@ -821,18 +821,24 @@ open_luks_device ()
 		_PLYMOUTH="true"
 	fi
 
+	# export udisk properties (used to get a nice device label)
+	unset ID_VENDOR_ENC ID_MODEL_ENC ID_PART_ENTRY_NUMBER
+	eval $(udevadm info --name=${dev} --query=property -x)
+	[ -z "${ID_VENDOR_ENC}" -a -z "${ID_MODEL_ENC}" ] && ID_MODEL_ENC="Unidentified device"
+	label="$(echo -e "${ID_VENDOR_ENC}${ID_MODEL_ENC}, Partition ${ID_PART_ENTRY_NUMBER} (${dev})")"
+
 	case "${_PLYMOUTH}" in
 		true)
 			plymouth --ping
 
 			cryptkeyscript="plymouth ask-for-password --prompt"
 			# Plymouth will add a : if it is a non-graphical prompt
-			cryptkeyprompt="Please unlock disk ${dev}"
+			cryptkeyprompt="Please unlock disk ${label}"
 			;;
 
 		*)
 			cryptkeyscript="/lib/cryptsetup/askpass"
-			cryptkeyprompt="Please unlock disk ${dev}: "
+			cryptkeyprompt="Please unlock disk ${label}: "
 			;;
 	esac
 
@@ -849,7 +855,7 @@ open_luks_device ()
 		fi
 
 		echo >&6
-		retryprompt="There was an error decrypting ${dev} ... Retry? [Y/n]"
+		retryprompt="There was an error decrypting ${label} ... Retry? [Y/n]"
 
 		case "${_PLYMOUTH}" in
 			true)
