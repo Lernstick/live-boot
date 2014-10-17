@@ -1,3 +1,9 @@
+live-boot (3.0.1-1+lernstick5) lernstick; urgency=medium
+
+  * [ea55] Human readable device label for LUKS prompt
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Fri, 17 Oct 2014 13:48:46 +0200
+
 live-boot (3.0.1-1+lernstick4) lernstick; urgency=medium
 
   * [6df9] Suppress loadkeys output in cryptdevice path
