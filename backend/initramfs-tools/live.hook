@@ -66,10 +66,10 @@ then
 fi
 
 # Configuration: Unique ID
-if [ -n "${LIVE_GENERATE_UUID}" ]
+if [ -r /etc/live/uuid.conf ]
 then
 	mkdir -p "${DESTDIR}/conf"
-	uuidgen -r > "${DESTDIR}/conf/uuid.conf"
+	cp /etc/live/uuid.conf ${DESTDIR}/conf
 fi
 
 # Filesystem: btrfs
