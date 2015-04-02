@@ -1,3 +1,12 @@
+live-boot (5.0~a1-1+lernstick1) lernstick-8; urgency=medium
+
+  * [dbd8] Immediately detect medium from live-media parameter
+  * [5e8b] Fix removable device flag handling for live-medium
+  * [02ca] Human readable device label for LUKS prompt
+  * [645f] Use build UUID
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Thu, 02 Apr 2015 10:37:55 +0200
+
 live-boot (5.0~a1-1) experimental; urgency=low
 
   [ Tails developers ]
