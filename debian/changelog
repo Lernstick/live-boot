@@ -1,3 +1,9 @@
+live-boot (5.0~a1-1+lernstick2) lernstick-8; urgency=medium
+
+  * [17bc] Modprobe filesystem modules before checking support
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Thu, 02 Apr 2015 17:34:11 +0200
+
 live-boot (5.0~a1-1+lernstick1) lernstick-8; urgency=medium
 
   * [dbd8] Immediately detect medium from live-media parameter
