@@ -1031,17 +1031,7 @@ find_persistence_media ()
 	white_listed_devices="${2}"
 	ret=""
 
-	#
-	# The devices that are hosting the actual live rootfs should not be
-	# used for persistence storage since otherwise you might mount a
-	# parent directory on top of a sub-directory of the same filesystem
-	# in one union together.
-	#
-	black_listed_devices=""
-	for d in /live/rootfs/* /live/findiso /live/fromiso
-	do
-		black_listed_devices="${black_listed_devices} $(what_is_mounted_on d)"
-	done
+	black_listed_devices="$(what_is_mounted_on /live/medium) $(what_is_mounted_on /live/findiso) $(what_is_mounted_on /live/fromiso)"
 
 	for dev in $(storage_devices "${black_listed_devices}" "${white_listed_devices}")
 	do
