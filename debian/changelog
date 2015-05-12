@@ -1,3 +1,13 @@
+live-boot (5.0~a3-1+lernstick1) lernstick-8; urgency=medium
+
+  * Rebuild for lernstick
+  * Rebase on latest upstream branch:
+    - Remove patch to modprobe filesystem modules before checking support
+      included upstream.
+  * [bd5f0c] Revert "Blacklist devices used for /live/rootfs/* insted of /live/medium."
+
+ -- Gaudenz Steinlin <gaudenz@debian.org>  Tue, 12 May 2015 11:44:17 +0200
+
 live-boot (5.0~a3-1) unstable; urgency=low
 
   [ Tails developers ]
