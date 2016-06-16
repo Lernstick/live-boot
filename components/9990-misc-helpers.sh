@@ -816,7 +816,7 @@ open_luks_device ()
 	load_keymap
 
 	# check for plymouth
-	if [ -x /bin/plymouth ]
+	if plymouth --ping
 	then
 		_PLYMOUTH="true"
 	fi
@@ -829,8 +829,6 @@ open_luks_device ()
 
 	case "${_PLYMOUTH}" in
 		true)
-			plymouth --ping
-
 			cryptkeyscript="plymouth ask-for-password --prompt"
 			# Plymouth will add a : if it is a non-graphical prompt
 			cryptkeyprompt="Please unlock disk ${label}"
