@@ -20,6 +20,6 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-for module in i915 radeon nouveau ; do
+for module in i915 radeon ; do
 	manual_add_modules $module
 done
