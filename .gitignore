@@ -1,2 +1,14 @@
-/.pc
+debian/debhelper-build-stamp
+debian/files
+debian/live-boot/
+debian/live-boot.debhelper.log
+debian/live-boot-doc/
+debian/live-boot-doc.debhelper.log
+debian/live-boot-doc.substvars
+debian/live-boot-initramfs-tools/
+debian/live-boot-initramfs-tools.debhelper.log
+debian/live-boot-initramfs-tools.substvars
+debian/live-boot.substvars
 /debian/patches
+debian/tmp/
+/.pc
