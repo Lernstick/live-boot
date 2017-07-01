@@ -1,3 +1,104 @@
+live-boot (1:20170623) unstable; urgency=medium
+
+  * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.
+    Closes: #864385 Thanks to Daniel Reichelt <debian@nachtgeist.net> for the
+    patch.
+  * Take into account the fact that udevadm is now in /bin and no longer in
+    /sbin. Closes: #852570
+  * Add myself to Uploaders.
+  * Bump debhelper compat to 10.
+  * Bump Standards-Version to 4.0.0.
+  * Fix spelling errors in live-boot(7).
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Fri, 23 Jun 2017 14:41:06 +0200
+
+live-boot (1:20170112) unstable; urgency=medium
+
+  [ Raphaël Hertzog ]
+  * Team upload.
+  * Fix nodhcp option to actually force DHCP off. Closes: #785345
+    Thanks to Frank Lillo for the report and Evgeni Golov for the patch.
+  * Improve 9990-misc-helpers.sh when /sys/block/ is empty.
+    Closes: #847802
+  * Multiple cleanups to appease lintian.
+
+  [ Kristian Klausen ]
+  * Add "nls_ascii" module in the initrd so that we can access FAT
+    partitions. Closes: #850532
+  * Copy /etc/live/boot.conf and /etc/live/boot to the initrd.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Thu, 12 Jan 2017 16:59:49 +0100
+
+live-boot (1:20160511) unstable; urgency=medium
+
+  * Team upload.
+  * Update build system to rely on "dpkg-parsechangelog -S Version" instead
+    of outdated VERSION file.
+  * No longer modify PATH to point to /root and thus stop using executables
+    from /root. Closes: #823069
+  * Drop debian/source/local-options as the only option it contained was
+    not applicable to 3.0 (native) source format.
+  * Drop debian/source/options and dh_builddeb override as XZ compression is
+    the default now.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Wed, 11 May 2016 11:40:37 +0200
+
+live-boot (1:20151213) unstable; urgency=medium
+
+  [ Iain R. Learmonth ]
+  * Change to native package.
+  * debian/control:
+   - Added myself to uploaders.
+   - Updated Vcs-* and Homepage fields.
+
+  [ trebmuh ]
+  * Adding French translation for live-boot manpage and prep for
+    persistence.conf.
+
+  [ Carlos Zuferri ]
+  * Using 'Live Systems Project' as default project in .pot files.
+
+ -- Iain R. Learmonth <irl@debian.org>  Sun, 13 Dec 2015 16:12:07 +0000
+
+live-boot (5.0~a5-2) unstable; urgency=low
+
+  * Removing myself from uploaders, lost trust in Debian (#804315).
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Fri, 20 Nov 2015 13:04:24 +0100
+
+live-boot (5.0~a5-1) unstable; urgency=low
+
+  [ Richard Nelson ]
+  * Adjusting whitespace to tabs on components/9990-overlay.sh
+  * Adjusting whitespace to tabs on components/9990-misc-helpers.sh
+  * Adjusting whitespace to tabs on components/9990-mount-http.sh
+
+  [ Daniel Baumann ]
+  * Wrap and sort debian control file.
+
+  [ Steven Shiau ]
+  * Support predictable network interface names.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 23 Aug 2015 10:55:32 +0200
+
+live-boot (5.0~a4-1) unstable; urgency=low
+
+  [ Tails developers ]
+  * Logging a warning when an expected image file is missing.
+  * Patch by Steven Shiau <steven@nchc.org.tw>. The only changes so far
+    are:
+  * Removing attempt to mount overlayfs in an obsolete way.
+  * Cleaning up comment to keep only the part that's relevant here.
+  * Adding missing quotes.
+  * Removing obsolete code.
+  * Refactoring duplicate identical call to mount.
+
+  [ Daniel Baumann ]
+  * Switching default union filesystem to overlay, wheezy systems can use
+    union=aufs for the time being.
+
+ -- Daniel Baumann <mail@daniel-baumann.ch>  Sun, 17 May 2015 21:04:01 +0200
+
 live-boot (5.0~a3-1+lernstick2) lernstick-8; urgency=medium
 
   * [33291c] Check if plymouth is actually running

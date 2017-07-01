@@ -117,6 +117,8 @@ setup_unionfs ()
 				log_begin_msg "Mounting \"${image}\" on \"${mpoint}\" via \"${backdev}\""
 				mount -t "${fstype}" -o ro,noatime "${backdev}" "${mpoint}" || panic "Can not mount ${backdev} (${image}) on ${mpoint}"
 				log_end_msg
+			else
+				log_warning_msg "Could not find image '${image}'. Most likely it is listed in a .module file, perhaps by mistake."
 			fi
 		done
 	else
@@ -272,7 +274,7 @@ setup_unionfs ()
 			panic "only one RO file system supported with exposedroot: ${rootfslist}"
 		fi
 
-		mount --bind ${rootfs} ${rootmnt} || \
+		mount -o bind ${rootfs} ${rootmnt} || \
 			panic "bind mount of ${rootfs} failed"
 
 		if [ -z "${SKIP_UNION_MOUNTS}" ]
@@ -355,8 +357,8 @@ setup_unionfs ()
 		done
 	fi
 
-        # ensure that a potentially stray tmpfs gets removed
-        # otherways, initramfs-tools is unable to remove /live
-        # and fails to boot
-        umount /live/overlay > /dev/null 2>&1 || true
+	# ensure that a potentially stray tmpfs gets removed
+	# otherways, initramfs-tools is unable to remove /live
+	# and fails to boot
+	umount /live/overlay > /dev/null 2>&1 || true
 }
