@@ -1,3 +1,21 @@
+live-boot (1:20170623+lernstick) lernstick-9; urgency=medium
+
+  [ Gaudenz Steinlin ]
+  * Immediately detect medium from live-media parameter
+  * Fix removable device flag handling for live-medium
+  * Human readable device label for LUKS prompt
+  * Use build UUID
+  * Update changelog
+  * Update changelog
+  * Revert "Blacklist devices used for /live/rootfs/* insted of /live/medium."
+  * Check if plymouth is actually running
+  * Update changelog for version 5.0~a3-1+lernstick2
+
+  [ Ronny Standtke ]
+  * don't add nouveau to initramfs, it clashes with the proprietary NVIDIA drivers
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Sat, 01 Jul 2017 18:26:33 +0200
+
 live-boot (1:20170623) unstable; urgency=medium
 
   * Do not duplicate files in /lib/live/boot/ and /bin/boot/ in the initrd.
