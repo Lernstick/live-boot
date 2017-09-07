@@ -1,3 +1,10 @@
+live-boot (1:20170623+lernstick2) lernstick-9; urgency=medium
+
+  * [895670] updated gitignore file
+  * [903d7a] fixed read-only mode with overlayfs
+
+ -- Ronny Standtke <ronny.standtke@gmx.net>  Thu, 07 Sep 2017 16:59:08 +0200
+
 live-boot (1:20170623+lernstick) lernstick-9; urgency=medium
 
   [ Gaudenz Steinlin ]
